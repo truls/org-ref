@@ -182,7 +182,9 @@ This function should only apply when in a bibtex file."
 	       (car dois)
 	       (buffer-file-name))
 	      ;; we should copy the pdf to the pdf directory though
-	      (let ((key (cdr (assoc "=key=" (bibtex-parse-entry)))))
+              (let ((key (progn
+                           (bibtex-beginning-of-entry)
+                           (cdr (assoc "=key=" (bibtex-parse-entry))))))
 	      	(copy-file (dnd-unescape-uri path) (expand-file-name (format "%s.pdf" key) org-ref-pdf-directory))))
 	    action)
 	   ;; Multiple DOIs found
