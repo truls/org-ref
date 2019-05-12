@@ -53,6 +53,15 @@ path, or you want to use another version."
   :type 'regexp
   :group 'org-ref-pdf)
 
+(defcustom org-ref-pdf-copy-function
+  #'copy-file
+  "Function called to copy the source PDF to `org-ref-pdf-directory`.
+If you want to move the file instead of copying, set this to
+`rename-file`. The function specified here must accept the source
+and destination file names as parameters."
+  :type 'function
+  :group 'org-ref-pdf)`
+
 (defun org-ref-extract-doi-from-pdf (pdf)
   "Try to extract a doi from a PDF file.
 There may be more than one doi in the file. This function returns
@@ -185,7 +194,11 @@ This function should only apply when in a bibtex file."
               (let ((key (progn
                            (bibtex-beginning-of-entry)
                            (cdr (assoc "=key=" (bibtex-parse-entry))))))
-	      	(copy-file (dnd-unescape-uri path) (expand-file-name (format "%s.pdf" key) org-ref-pdf-directory))))
+                (if key
+                    (funcall org-ref-pdf-copy-function (dnd-unescape-uri path)
+                               (expand-file-name
+                                (format "%s.pdf" key) org-ref-pdf-directory))
+                  (message "Could not get key of entry. Not copying file."))))
 	    action)
 	   ;; Multiple DOIs found
 	   (t
