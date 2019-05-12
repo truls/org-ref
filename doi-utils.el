@@ -101,9 +101,7 @@ e.g. (lambda () nil)"
   :group 'doi-utils)
 
 (defcustom doi-utils-make-notes-function
-  (lambda ()
-    (bibtex-beginning-of-entry)
-    (bibtex-completion-edit-notes (list (cdr (assoc "=key=" (bibtex-parse-entry))))))
+  #'org-ref-open-bibtex-notes
   "Function to create notes for a bibtex entry.
 
 Set `doi-utils-make-notes' to nil if you want no notes."
